@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!-- 配置mybatis sql打印 -->
+        <setting name="logPrefix" value="dao."/>
+    </settings>
+    <!-- 配置分页插件 -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库-->
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
+    <mappers>
+        <!--直接映射到相应的mapper文件-->
+        <!--<mapper resource="classpath:mybatis/UserMapper.xml"/>-->
+        <!--扫描包路径下所有xxMapper.xml文件-->
+        <!--<package name="com.hm.funds.mapper"/>-->
+    </mappers>
+ </configuration>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="process" isExecutable="true">
+    <startEvent id="startEvent" name="开始"></startEvent>
+    <userTask id="sales" name="项目经理" activiti:candidateGroups="sales"></userTask>
+    <sequenceFlow id="sid-F59CF8B8-7F25-4D2F-B895-3A953CF18F4A" sourceRef="startEvent" targetRef="sales"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusivegateway1"></exclusiveGateway>
+    <userTask id="management" name="部门经理" activiti:candidateGroups="management"></userTask>
+    <endEvent id="endEvent" name="结束"></endEvent>
+    <sequenceFlow id="flow3" name="通过" sourceRef="exclusivegateway1" targetRef="management">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow5" name="拒绝" sourceRef="exclusivegateway1" targetRef="endEvent">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='0'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="sales" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="management" targetRef="endEvent"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane bpmnElement="process" id="BPMNPlane_process">
+      <bpmndi:BPMNShape bpmnElement="startEvent" id="BPMNShape_startEvent">
+        <omgdc:Bounds height="30.0" width="30.0" x="15.0" y="130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sales" id="BPMNShape_Sales">
+        <omgdc:Bounds height="80.0" width="100.0" x="120.0" y="105.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="345.0" y="125.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="management" id="BPMNShape_Management">
+        <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="195.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endEvent" id="BPMNShape_endEvent">
+        <omgdc:Bounds height="28.0" width="28.0" x="720.0" y="131.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="365.6792474504294" y="164.3207525495706"></omgdi:waypoint>
+        <omgdi:waypoint x="366.3333435058594" y="233.0"></omgdi:waypoint>
+        <omgdi:waypoint x="495.0" y="234.44029847559563"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="220.0" y="145.12787723785166"></omgdi:waypoint>
+        <omgdi:waypoint x="345.44871794871796" y="145.44871794871796"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="384.5258152173913" y="145.4741847826087"></omgdi:waypoint>
+        <omgdi:waypoint x="720.0000128873156" y="145.01899591195752"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="595.0" y="213.60915952673693"></omgdi:waypoint>
+        <omgdi:waypoint x="721.1553266442364" y="159.63779018475185"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F59CF8B8-7F25-4D2F-B895-3A953CF18F4A" id="BPMNEdge_sid-F59CF8B8-7F25-4D2F-B895-3A953CF18F4A">
+        <omgdi:waypoint x="45.0" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="120.0" y="145.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

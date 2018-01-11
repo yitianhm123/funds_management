@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1515399504435" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <process id="payApply" isClosed="false" isExecutable="true" name="付款申请" processType="None">
+    <startEvent activiti:initiator="applicant" id="startGycPayApply" name="开始">
+      <extensionElements>
+        <activiti:formProperty id="bussinessNo" name="bussinessNo" type="string"/>
+      </extensionElements>
+    </startEvent>
+    <userTask activiti:candidateGroups="GycSalesManager" activiti:exclusive="true" id="gycInvoiceDepartmentTask" name="销售经理"/>
+    <sequenceFlow id="flow1" sourceRef="startGycPayApply" targetRef="gycInvoiceDepartmentTask"/>
+    <userTask activiti:candidateGroups="GycSalesFinance" activiti:exclusive="true" id="gycInvoiceFinanceTask" name="财务审批"/>
+    <userTask activiti:candidateGroups="GycGeneralManager" activiti:exclusive="true" id="gycInvoiceCEOTask" name="总经理"/>
+    <endEvent id="endGycPayApply" name="结束"/>
+    <userTask activiti:candidateGroups="GycSalesDirector" activiti:exclusive="true" id="usertask1" name="销售总监"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway1" name="Exclusive Gateway"/>
+    <sequenceFlow id="flow2" sourceRef="gycInvoiceDepartmentTask" targetRef="exclusivegateway1"/>
+    <sequenceFlow id="flow3" name="通过" sourceRef="exclusivegateway1" targetRef="usertask1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1' && amount>startAmount}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow4" name="通过" sourceRef="exclusivegateway1" targetRef="gycInvoiceFinanceTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1' && amount<=startAmount}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway2" name="Exclusive Gateway"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway3" name="Exclusive Gateway"/>
+    <sequenceFlow id="flow6" sourceRef="usertask1" targetRef="exclusivegateway2"/>
+    <sequenceFlow id="flow7" name="通过" sourceRef="exclusivegateway2" targetRef="gycInvoiceCEOTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1' && amount>endAmount}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="gycInvoiceCEOTask" targetRef="exclusivegateway3"/>
+    <sequenceFlow id="flow9" name="通过" sourceRef="exclusivegateway3" targetRef="gycInvoiceFinanceTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow10" name="通过" sourceRef="exclusivegateway2" targetRef="gycInvoiceFinanceTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1' && amount>startAmount && amount<=endAmount}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow11" name="拒绝" sourceRef="exclusivegateway1" targetRef="endGycPayApply">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='0'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow12" name="拒绝" sourceRef="exclusivegateway2" targetRef="endGycPayApply">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='0'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow13" name="拒绝" sourceRef="exclusivegateway3" targetRef="endGycPayApply">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='0'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask activiti:candidateGroups="gycInvoiceApplyFinanceManager" activiti:exclusive="true" id="gycInvoiceApplyFinanceManagerTask" name="财务总监"/>
+    <sequenceFlow id="_4" sourceRef="gycInvoiceApplyFinanceManagerTask" targetRef="endGycPayApply"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway4" name="Exclusive Gateway"/>
+    <sequenceFlow id="_6" sourceRef="gycInvoiceFinanceTask" targetRef="exclusivegateway4"/>
+    <sequenceFlow id="_7" name="通过" sourceRef="exclusivegateway4" targetRef="gycInvoiceApplyFinanceManagerTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1'&&businessType=='10'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_8" name="通过" sourceRef="exclusivegateway4" targetRef="endGycPayApply">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${(result=='1'&&businessType!='10')||result=='0'}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=2;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="payApply">
+      <bpmndi:BPMNShape bpmnElement="startGycPayApply" id="Shape-startGycPayApply">
+        <omgdc:Bounds height="32.0" width="32.0" x="1.0" y="209.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="gycInvoiceDepartmentTask" id="Shape-gycInvoiceDepartmentTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="81.0" y="199.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="gycInvoiceFinanceTask" id="Shape-gycInvoiceFinanceTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="990.0" y="210.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="gycInvoiceCEOTask" id="Shape-gycInvoiceCEOTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="680.0" y="199.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endGycPayApply" id="Shape-endGycPayApply">
+        <omgdc:Bounds height="32.0" width="32.0" x="1565.0" y="230.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="Shape-usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="380.0" y="199.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="Shape-exclusivegateway1" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="260.0" y="206.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="Shape-exclusivegateway2" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="570.0" y="206.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway3" id="Shape-exclusivegateway3" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="890.0" y="206.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="gycInvoiceApplyFinanceManagerTask" id="Shape-gycInvoiceApplyFinanceManagerTask">
+        <omgdc:Bounds height="55.0" width="85.0" x="1385.0" y="215.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway4" id="Shape-exclusivegateway4" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="1230.0" y="215.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1" sourceElement="startGycPayApply" targetElement="gycInvoiceDepartmentTask">
+        <omgdi:waypoint x="33.0" y="225.0"/>
+        <omgdi:waypoint x="81.0" y="226.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2" sourceElement="gycInvoiceDepartmentTask" targetElement="exclusivegateway1">
+        <omgdi:waypoint x="186.0" y="226.5"/>
+        <omgdi:waypoint x="260.0" y="222.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3" sourceElement="exclusivegateway1" targetElement="usertask1">
+        <omgdi:waypoint x="288.0" y="226.0"/>
+        <omgdi:waypoint x="336.0" y="226.0"/>
+        <omgdi:waypoint x="380.0" y="226.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="319.0" y="226.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4" sourceElement="exclusivegateway1" targetElement="gycInvoiceFinanceTask">
+        <omgdi:waypoint x="280.0" y="210.0"/>
+        <omgdi:waypoint x="280.0" y="54.0"/>
+        <omgdi:waypoint x="632.0" y="54.0"/>
+        <omgdi:waypoint x="1042.0" y="54.0"/>
+        <omgdi:waypoint x="1042.5" y="210.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="638.0" y="41.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6" sourceElement="usertask1" targetElement="exclusivegateway2">
+        <omgdi:waypoint x="485.0" y="226.5"/>
+        <omgdi:waypoint x="570.0" y="222.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7" sourceElement="exclusivegateway2" targetElement="gycInvoiceCEOTask">
+        <omgdi:waypoint x="602.0" y="222.0"/>
+        <omgdi:waypoint x="680.0" y="226.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="629.0" y="226.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8" sourceElement="gycInvoiceCEOTask" targetElement="exclusivegateway3">
+        <omgdi:waypoint x="785.0" y="226.5"/>
+        <omgdi:waypoint x="890.0" y="222.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9" sourceElement="exclusivegateway3" targetElement="gycInvoiceFinanceTask">
+        <omgdi:waypoint x="922.0" y="222.0"/>
+        <omgdi:waypoint x="990.0" y="237.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="939.0" y="226.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13" sourceElement="exclusivegateway3" targetElement="endGycPayApply">
+        <omgdi:waypoint x="909.0" y="209.0"/>
+        <omgdi:waypoint x="909.0" y="114.0"/>
+        <omgdi:waypoint x="1227.0" y="114.0"/>
+        <omgdi:waypoint x="1581.0" y="230.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="1061.0" y="101.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4" id="BPMNEdge__4" sourceElement="gycInvoiceApplyFinanceManagerTask" targetElement="endGycPayApply">
+        <omgdi:waypoint x="1470.0" y="242.5"/>
+        <omgdi:waypoint x="1565.0" y="246.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_6" id="BPMNEdge__6" sourceElement="gycInvoiceFinanceTask" targetElement="exclusivegateway4">
+        <omgdi:waypoint x="1095.0" y="237.5"/>
+        <omgdi:waypoint x="1230.0" y="231.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_7" id="BPMNEdge__7" sourceElement="exclusivegateway4" targetElement="gycInvoiceApplyFinanceManagerTask">
+        <omgdi:waypoint x="1262.0" y="231.0"/>
+        <omgdi:waypoint x="1385.0" y="242.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-2.0" width="0.0" x="0.0" y="-23.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10" sourceElement="exclusivegateway2" targetElement="gycInvoiceFinanceTask">
+        <omgdi:waypoint x="586.0" y="238.0"/>
+        <omgdi:waypoint x="658.0" y="361.0"/>
+        <omgdi:waypoint x="806.0" y="361.0"/>
+        <omgdi:waypoint x="908.0" y="361.0"/>
+        <omgdi:waypoint x="1042.0" y="361.0"/>
+        <omgdi:waypoint x="1042.5" y="265.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="776.0" y="350.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_8" id="BPMNEdge__8" sourceElement="exclusivegateway4" targetElement="endGycPayApply">
+        <omgdi:waypoint x="1246.0" y="247.0"/>
+        <omgdi:waypoint x="1375.0" y="335.0"/>
+        <omgdi:waypoint x="1581.0" y="262.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11" sourceElement="exclusivegateway1" targetElement="endGycPayApply">
+        <omgdi:waypoint x="279.0" y="235.0"/>
+        <omgdi:waypoint x="279.0" y="430.0"/>
+        <omgdi:waypoint x="1227.0" y="432.0"/>
+        <omgdi:waypoint x="1581.0" y="262.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="738.0" y="429.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12" sourceElement="exclusivegateway2" targetElement="endGycPayApply">
+        <omgdi:waypoint x="589.0" y="235.0"/>
+        <omgdi:waypoint x="589.0" y="402.0"/>
+        <omgdi:waypoint x="864.0" y="402.0"/>
+        <omgdi:waypoint x="1017.0" y="402.0"/>
+        <omgdi:waypoint x="1162.0" y="402.0"/>
+        <omgdi:waypoint x="1581.0" y="262.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="883.0" y="389.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
