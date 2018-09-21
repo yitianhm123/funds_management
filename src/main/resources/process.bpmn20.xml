@@ -2,32 +2,32 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
   <process id="process" isExecutable="true">
     <startEvent id="startEvent" name="开始"></startEvent>
-    <userTask id="sales" name="项目经理" activiti:candidateGroups="sales"></userTask>
-    <sequenceFlow id="sid-F59CF8B8-7F25-4D2F-B895-3A953CF18F4A" sourceRef="startEvent" targetRef="sales"></sequenceFlow>
+    <userTask id="Sales" name="项目经理"></userTask>
+    <sequenceFlow id="sid-F59CF8B8-7F25-4D2F-B895-3A953CF18F4A" sourceRef="startEvent" targetRef="Sales"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway1" name="Exclusivegateway1"></exclusiveGateway>
-    <userTask id="management" name="部门经理" activiti:candidateGroups="management"></userTask>
+    <userTask id="Management" name="部门经理"></userTask>
     <endEvent id="endEvent" name="结束"></endEvent>
-    <sequenceFlow id="flow3" name="通过" sourceRef="exclusivegateway1" targetRef="management">
+    <sequenceFlow id="flow3" name="通过" sourceRef="exclusivegateway1" targetRef="Management">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow5" name="拒绝" sourceRef="exclusivegateway1" targetRef="endEvent">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='0'}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow2" sourceRef="sales" targetRef="exclusivegateway1"></sequenceFlow>
-    <sequenceFlow id="flow4" sourceRef="management" targetRef="endEvent"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="Sales" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="Management" targetRef="endEvent"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_process">
     <bpmndi:BPMNPlane bpmnElement="process" id="BPMNPlane_process">
       <bpmndi:BPMNShape bpmnElement="startEvent" id="BPMNShape_startEvent">
         <omgdc:Bounds height="30.0" width="30.0" x="15.0" y="130.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sales" id="BPMNShape_Sales">
+      <bpmndi:BPMNShape bpmnElement="Sales" id="BPMNShape_Sales">
         <omgdc:Bounds height="80.0" width="100.0" x="120.0" y="105.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
         <omgdc:Bounds height="40.0" width="40.0" x="345.0" y="125.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="management" id="BPMNShape_Management">
+      <bpmndi:BPMNShape bpmnElement="Management" id="BPMNShape_Management">
         <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="195.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endEvent" id="BPMNShape_endEvent">

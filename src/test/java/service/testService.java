@@ -2,7 +2,6 @@ package service;
 
 
 import com.alibaba.druid.support.json.JSONUtils;
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hm.funds.mapper.TBookMapper;
@@ -23,16 +22,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:applicationContext.xml"})
+@ContextConfiguration(locations={"classpath:applicationContext.xml","classpath:activiti-context.xml"})
 public class testService {
 
     private static  final org.slf4j.Logger log = LoggerFactory.getLogger(testService.class);
@@ -144,11 +144,7 @@ public class testService {
         // 启动流程实例
         String procId = runtimeService.startProcessInstanceByKey("process").getId();
         // 获得第一个任务
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("sales").list();
-        if(CollectionUtils.isEmpty(tasks)){
-            tasks = taskService.createTaskQuery().taskAssignee("kermit").list();
-        }
-
+        List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("Sales").list();
         for (Task task : tasks) {
             System.out.println("Following task is available for sales group: " + task.getName());
             // 认领任务这里由foozie认领，因为fozzie是sales组的成员
@@ -159,16 +155,14 @@ public class testService {
         for (Task task : tasks) {
             System.out.println("Task for kermit: " + task.getName());
             // 执行(完成)任务
-            Map<String,Object> map = new HashMap<>();
-            map.put("result","1");
-            taskService.complete(task.getId(),map);
+            taskService.complete(task.getId());
         }
 
         // 现在fozzie的可执行任务数就为0了
         System.out.println("Number of tasks for kermit: "
                 + taskService.createTaskQuery().taskAssignee("kermit").count());
         // 获得第二个任务
-        tasks = taskService.createTaskQuery().taskCandidateGroup("management").list();
+        tasks = taskService.createTaskQuery().taskCandidateGroup("Management").list();
         for (Task task : tasks) {
             System.out.println("Following task is available for accountancy group:" + task.getName());
             // 认领任务这里由kermit认领，因为gonzo是management组的成员
@@ -177,16 +171,13 @@ public class testService {
 
         // 完成第二个任务结束流程
         for (Task task : tasks) {
-            Map<String,Object> map = new HashMap<>();
-            map.put("result","1");
             taskService.complete(task.getId());
         }
 
         // 核实流程是否结束,输出流程结束时间
         HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                 .processInstanceId(procId).singleResult();
-
-        System.out.println(JSON.toJSONString(historicProcessInstance));
+        System.out.println("Process instance end time: " + historicProcessInstance.getEndTime());
 
     }
 }
